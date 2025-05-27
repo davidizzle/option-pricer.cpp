@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <limits>
 
 // Helper function to parse float input
 double get_float_input(const std::string& prompt);

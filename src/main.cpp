@@ -1,7 +1,7 @@
-#include "option-pricer.hpp"
 #include "helper-functions.hpp"
+#include "option-pricer.hpp"
 
-int main(int argc, char** argv)
+int main()
 {
     std::cout << "-----Welcome to my first ever option pricer, as a CLI tool!-----" << std::endl;
 
@@ -21,7 +21,7 @@ int main(int argc, char** argv)
             price = black_scholes_price(S, K, T, r, sigma, option_type);
             std::cout << "\n--- Black-Scholes Model Results ---" << std::endl;
         } else if (model_choice == "binomial") {
-            int N_steps = get_int_input("Number of steps for Binomial Model (e.g., 100, 500): ");
+            size_t N_steps = (size_t)get_int_input("Number of steps for Binomial Model (e.g., 100, 500): ");
             price = binomial_option_price(S, K, T, r, sigma, N_steps, option_type);
             std::cout << "\n--- Binomial Model Results ---" << std::endl;
         } else if (model_choice == "garman-kohlhagen") {
@@ -29,7 +29,7 @@ int main(int argc, char** argv)
             price = garman_kohlhagen_price(S, K, T, r, r_foreign, sigma, option_type);
             std::cout << "\n--- Garman-Kohlhagen Model Results ---" << std::endl;
         } else if (model_choice == "monte-carlo") {
-            int num_simulations = get_int_input("Number of Monte Carlo Simulations (e.g., 100000): ");
+            size_t num_simulations = (size_t) get_int_input("Number of Monte Carlo Simulations (e.g., 100000): ");
             // Note: For simplicity, this MC implementation is for European options and doesn't use multiple steps.
             // For American options or path-dependent options, a more advanced MC would be needed.
             price = monte_carlo_price(S, K, T, r, sigma, num_simulations, option_type);

@@ -19,13 +19,13 @@ double black_scholes_price (double S, double K, double T, double r, double sigma
     return K * std::exp(-r * T) * boost::math::cdf(N, -d2) - S * boost::math::cdf(N, -d1);
 }
 
-double binomial_option_price (double S, double K, double T, double r, double sigma, int N_steps, const std::string& option_type)
+double binomial_option_price (double S, double K, double T, double r, double sigma, size_t N_steps, const std::string& option_type)
 {
     assert(T > 0 && "Time to maturity of option cannot be negative.");
     assert(sigma > 0 && "Volatility of underlying cannot be negative.");
     assert(N_steps > 0 && "Number of steps for binomial pricing cannot be negative.");
     
-    double dt = T / N_steps;
+    double dt = T / static_cast<double>(N_steps);
     double u = std::exp(sigma * std::sqrt(dt));
     double d = 1.0 / u;
     double p = (std::exp(r * dt) - d) / (u - d);
@@ -33,7 +33,7 @@ double binomial_option_price (double S, double K, double T, double r, double sig
     
     std::vector<double> option_values(N_steps + 1);
     
-    for(int ii = 0; ii <= N_steps; ++ii)
+    for(size_t ii = 0; ii <= static_cast<size_t>(N_steps); ++ii)
     {
         double curr_stock_price = S * std::pow(u, ii) * std::pow(d, N_steps - ii);
         
@@ -49,7 +49,7 @@ double binomial_option_price (double S, double K, double T, double r, double sig
     
     for (int jj = N_steps - 1; jj >= 0; --jj)
     {
-        for (int ii = 0; ii <= jj; ++ii)
+        for (size_t ii = 0; ii <= static_cast<size_t>(jj); ++ii)
         {
             option_values[ii] = (p * option_values[ii + 1] + (1 - p) * option_values[ii]) * discount_factor;
         }
@@ -76,7 +76,7 @@ double garman_kohlhagen_price (double S, double K, double T, double r_domestic, 
     return K * std::exp(-r_domestic * T) * boost::math::cdf(N, -d2) - S * std::exp(-r_foreign * T) * boost::math::cdf(N, -d1);
 }
 
-double monte_carlo_price (double S, double K, double T, double r, double sigma, int N_simulations, const std::string& option_type)
+double monte_carlo_price (double S, double K, double T, double r, double sigma, size_t N_simulations, const std::string& option_type)
 {
     assert(T > 0 && "Time to maturity of option cannot be negative.");
     assert(sigma > 0 && "Volatility of underlying cannot be negative.");
@@ -104,7 +104,7 @@ double monte_carlo_price (double S, double K, double T, double r, double sigma, 
         sum_payoffs += payoff;
     }
 
-    double average_payoff = sum_payoffs / N_simulations;
+    double average_payoff = sum_payoffs / (double) N_simulations;
     double discounted_price = average_payoff * std::exp(-r * T);
 
     return discounted_price;
